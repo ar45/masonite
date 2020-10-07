@@ -1,4 +1,3 @@
-import uuid
 
 import bcrypt
 
@@ -81,10 +80,7 @@ class WebGuard(AuthenticationGuard):
 
             if model and bcrypt.checkpw(bytes(password, "utf-8"), password_as_bytes):
                 if not self._once:
-                    remember_token = str(uuid.uuid4())
-                    model.remember_token = remember_token
-                    model.save()
-                    self.driver.save(remember_token, model=model)
+                    self.driver.save(model=model)
 
                 self.request.set_user(model)
                 return model
@@ -116,10 +112,7 @@ class WebGuard(AuthenticationGuard):
 
         if model:
             if not self._once:
-                remember_token = str(uuid.uuid4())
-                model.remember_token = remember_token
-                model.save()
-                self.driver.save(remember_token, model=model)
+                self.driver.save(model=model)
             self.request.set_user(model)
             return model
 
