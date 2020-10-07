@@ -1,6 +1,6 @@
 """Module for the Routing System."""
 
-import cgi
+from . import cgi
 import importlib
 import json
 import re
