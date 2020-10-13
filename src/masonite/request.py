@@ -406,21 +406,11 @@ class Request(Extendable):
                 when the request uses the standard http(s) port (default: {False}).
 
         Returns:
-            string -- the requested url.
+            string -- the requested site.
         """
-        scheme = self.scheme()
-        host = self.host()
-        port = self.port()
+        site = self.site(include_standard_port=include_standard_port)
         path = self.full_path()
-        if (
-            include_standard_port
-            or (scheme == "https" and port != "443")
-            or (scheme == "http" and port != "80")
-        ):
-            port_part = ":{}".format(port)
-        else:
-            port_part = ""
-        return "{}://{}{}{}".format(scheme, host, port_part, path)
+        return "{}{}".format(site, path)
 
     def full_url(self, include_standard_port=False):
         """Get the full url including query string of the current request.
@@ -440,6 +430,30 @@ class Request(Extendable):
             return "{}?{}".format(url, query_string)
         else:
             return url
+
+    def site(self, include_standard_port=False):
+        """Get the site of the current request including the scheme://host:port.
+
+        useful to construct links that direct back to the same site the user visited.
+        Args:
+            include_standard_port {bool} -- whether to include the port
+                when the request uses the standard http(s) port (default: {False}).
+
+        Returns:
+            string -- the requested url.
+        """
+        scheme = self.scheme()
+        host = self.host()
+        port = self.port()
+        if (
+                include_standard_port
+                or (scheme == "https" and port != "443")
+                or (scheme == "http" and port != "80")
+        ):
+            port_part = ":{}".format(port)
+        else:
+            port_part = ""
+        return "{}://{}{}".format(scheme, host, port_part)
 
     def query_string(self):
         """Get the raw query string of the current request url.
