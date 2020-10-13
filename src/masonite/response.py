@@ -20,8 +20,10 @@ class Response(Extendable):
     """
 
     def __init__(self, app: App):
+        from config import application
         self.app = app
         self.request = self.app.make("Request")
+        self.json_dumps_kwargs = getattr(application, 'JSON', {}).get('DUMPS_KWARGS', {})
 
     def json(self, payload, status=200):
         """Gets the response ready for a JSON response.
@@ -32,7 +34,7 @@ class Response(Extendable):
         Returns:
             string -- Returns a string representation of the data
         """
-        self.app.bind("Response", bytes(json.dumps(payload, ensure_ascii=False), "utf-8"))
+        self.app.bind("Response", bytes(json.dumps(payload, **self.json_dumps_kwargs), "utf-8"))
         self.make_headers(content_type="application/json; charset=utf-8")
         self.request.status(status)
 

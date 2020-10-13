@@ -19,9 +19,12 @@ class View(Responsable):
         Arguments:
             container {masonite.app.App} -- Container object.
         """
+        from config import application
+        self.json_dumps_kwargs = getattr(application, 'JSON', {}).get('DUMPS_KWARGS', {})
         self.dictionary = {}
         self.composers = {}
         self.container = container
+        self.template_json_decoder = container
 
         # If the cache_for method is declared
         self.cache = False
@@ -265,7 +268,10 @@ class View(Responsable):
                 line_statement_prefix="@",
             )
 
+        if self.json_dumps_kwargs:
+            self.env.policies.setdefault('json.dumps_kwargs', {}).update(self.json_dumps_kwargs)
         self.env.filters.update(self._filters)
+
 
     def __create_cache_template(self, template):
         """Save in the cache the template.
