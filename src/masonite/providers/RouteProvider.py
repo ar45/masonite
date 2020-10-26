@@ -1,4 +1,5 @@
 """A RouteProvider Service Provider."""
+from collections import OrderedDict
 
 from ..helpers.routes import create_matchurl
 from ..provider import ServiceProvider
@@ -56,7 +57,7 @@ class RouteProvider(ServiceProvider):
                 """
 
                 try:
-                    parameter_dict = {}
+                    parameter_dict = OrderedDict()
                     for index, value in enumerate(matchurl.match(router.url).groups()):
                         parameter_dict[
                             route.url_list[index]
