@@ -1,6 +1,9 @@
 """Module for the Routing System."""
 
-from . import cgi
+try:
+    from app import cgi
+except ImportError:
+    from . import cgi
 import importlib
 import json
 import re
