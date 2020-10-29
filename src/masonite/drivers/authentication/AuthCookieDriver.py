@@ -1,6 +1,7 @@
 """AuthCookieDriver Module."""
 import json
 from datetime import datetime, timedelta
+from dateutil.parser import isoparse
 
 from cryptography.fernet import InvalidToken
 
@@ -38,7 +39,7 @@ class AuthCookieDriver(BaseDriver, AuthContract):
             # print(decrypted)
             expires = decrypted.get('expires')
             if expires:
-                expires = datetime.fromisoformat(expires)
+                expires = isoparse(expires)
             if not expires or expires <= datetime.now():
                 # print('session expired {}'.format(expires))
                 return False
